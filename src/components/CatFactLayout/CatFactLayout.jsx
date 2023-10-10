@@ -15,15 +15,18 @@ const CatFactLayout = () => {
     // Hook me permettant de récupérer mon contexte de theme
     const theme = useContext(ThemeContext);
     // Hook me permettant de récupérer mon contexte spotify
-    const { authenticate, logout, isAuthenticated} = useContext(SpotifyContext);
+    const { authenticate, logout, isAuthenticated } = useContext(SpotifyContext);
 
     // mon custom hook qui fetch sur l'API Kanye Quote
     const fetchKanyeQuote = useKanyeQuote();
 
+
     // hook d'état pour gérer un state de mon composant, ici un loading
     const [loading, setloading] = useState(false);
     // hook d'état pour gérer un state de mon composant, ici un disable de bouton
-    const [disableButton, setdisableButton] = useState(false)
+    const [disableButton, setdisableButton] = useState(false);
+    
+    const [quote, setQuote] = useState();
 
     // Après le clic sur un bouton, j'exécute cette fonction
     const fetchData = async () => {
@@ -40,7 +43,7 @@ const CatFactLayout = () => {
         
         // J'ai récupéré mes données, je passe le loading à false.
         setloading(false);
-
+        setQuote(result.quote);
         // Grâce au history fournit par le hook useHistory, j'ai accès à cette fonction qui me facilite le changement de page.
         // Ici je décide en plus de passer un état à cette page; le résultat de mon fetch
         // Enfin, J'utilise une constante pour gérer mes routes. cf le fichier constants.js
@@ -67,6 +70,10 @@ const CatFactLayout = () => {
         return () => logout();
         // Je peux mettre dans ce tableau les dépendances du useEffect. Le useEffect sera rééxécuté automatiquement si une de ces valeurs change.
     }, [authenticate, logout])
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <div 
@@ -99,6 +106,7 @@ const CatFactLayout = () => {
                 text="New quote" 
                 disabled={disableButton || !isAuthenticated}
             />
+            <p>{quote}</p>
             { !isAuthenticated && (
                 <p>Connectez vous pour pouvoir cliquer.</p>
             )}

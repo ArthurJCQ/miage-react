@@ -10,7 +10,7 @@ const Button = ({
 }) => {
 
     return (
-            <button 
+            <button
             onClick={() => onCLick()}
             className={!disabled ? 'btn' : 'btn btn--disabled'} 
             disabled={loading || disabled}
